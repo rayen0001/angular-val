@@ -1,0 +1,212 @@
+.pitch-card {
+  background: var(--white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .pitch-header {
+    margin-bottom: 1rem;
+
+    .pitch-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .pitch-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .stage-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+
+        &.stage-idea {
+          background-color: #fef3c7;
+          color: #92400e;
+        }
+
+        &.stage-prototype {
+          background-color: #dbeafe;
+          color: #1e40af;
+        }
+
+        &.stage-mvp {
+          background-color: #d1fae5;
+          color: #065f46;
+        }
+
+        &.stage-growth {
+          background-color: #fce7f3;
+          color: #be185d;
+        }
+
+        &.stage-scale {
+          background-color: #e0e7ff;
+          color: #3730a3;
+        }
+      }
+
+      .industry {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .pitch-content {
+    margin-bottom: 1.5rem;
+
+    .pitch-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .pitch-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+
+        i {
+          color: var(--primary-color);
+          width: 16px;
+        }
+      }
+    }
+
+    .founder-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+
+      i {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .pitch-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .pitch-stats {
+      display: flex;
+      gap: 1rem;
+
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+
+        i {
+          color: var(--warning-color);
+        }
+      }
+    }
+
+    .pitch-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      .vote-buttons {
+        display: flex;
+        gap: 0.25rem;
+
+        .vote-btn {
+          width: 32px;
+          height: 32px;
+          border: none;
+          border-radius: 50%;
+          font-weight: 600;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &.vote-1 {
+            background-color: #fee2e2;
+            color: #dc2626;
+            &:hover { background-color: #fecaca; }
+          }
+
+          &.vote-2 {
+            background-color: #fed7aa;
+            color: #ea580c;
+            &:hover { background-color: #fdba74; }
+          }
+
+          &.vote-3 {
+            background-color: #fef3c7;
+            color: #d97706;
+            &:hover { background-color: #fde68a; }
+          }
+
+          &.vote-4 {
+            background-color: #dcfce7;
+            color: #16a34a;
+            &:hover { background-color: #bbf7d0; }
+          }
+
+          &.vote-5 {
+            background-color: #dbeafe;
+            color: #2563eb;
+            &:hover { background-color: #bfdbfe; }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .pitch-card {
+    padding: 1rem;
+
+    .pitch-footer {
+      flex-direction: column;
+      align-items: stretch;
+
+      .pitch-actions {
+        justify-content: center;
+      }
+    }
+
+    .pitch-details {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}

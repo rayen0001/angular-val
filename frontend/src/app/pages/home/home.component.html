@@ -1,0 +1,103 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title fade-in">
+          Discover the Next Big Thing
+        </h1>
+        <p class="hero-subtitle fade-in">
+          Connect with innovative startups, vote on promising pitches, and be part of the entrepreneurial journey.
+        </p>
+        <div class="hero-actions fade-in">
+          @if (!currentUserRole()) {
+            <a href="/register" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="/login" class="btn btn-outline btn-lg">Sign In</a>
+          } @else {
+            <a [href]="'/' + currentUserRole()" class="btn btn-primary btn-lg">Go to Dashboard</a>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Active Contests Section -->
+    @if (getActiveContests().length > 0) {
+      <section class="contests-section">
+        <div class="section-header">
+          <h2>Active Contests</h2>
+          <p>Join these exciting pitch competitions</p>
+        </div>
+        <app-contest-list [contests]="getActiveContests()"></app-contest-list>
+      </section>
+    }
+
+    <!-- Featured Pitches Section -->
+    <section class="pitches-section">
+      <div class="section-header">
+        <h2>Featured Pitches</h2>
+        <p>Explore innovative startup ideas from entrepreneurs worldwide</p>
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading pitches...</p>
+        </div>
+      } @else if (pitches.length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-lightbulb"></i>
+          <h3>No pitches yet</h3>
+          <p>Be the first to share your startup idea!</p>
+          @if (currentUserRole() === 'founder') {
+            <a href="/founder/pitch/create" class="btn btn-primary">Create Your Pitch</a>
+          }
+        </div>
+      } @else {
+        <div class="pitches-grid">
+          @for (pitch of pitches; track pitch.id) {
+            <app-pitch-card 
+              [pitch]="pitch" 
+              [userRole]="currentUserRole()"
+              (vote)="onVote($event)">
+            </app-pitch-card>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ pitches.length }}</h3>
+            <p>Active Pitches</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ contests.length }}</h3>
+            <p>Total Contests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getActiveContests().length }}</h3>
+            <p>Active Contests</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+<div class="investor-dashboard">
+  <div class="container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1>Welcome back, {{ currentUser?.firstName }}!</h1>
+        <p>Discover and evaluate promising startups</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ getMyVotesCount() }}</span>
+          <span class="stat-label">Votes Cast</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ getMyCommentsCount() }}</span>
+          <span class="stat-label">Comments</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Contests -->
+    @if (getActiveContests().length > 0) {
+      <div class="contests-section">
+        <div class="section-header">
+          <h2>Active Contests</h2>
+          <p>Vote on these contest entries</p>
+        </div>
+        <app-contest-list [contests]="getActiveContests()"></app-contest-list>
+      </div>
+    }
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="filters-header">
+        <h2>Discover Pitches</h2>
+        <button (click)="clearFilters()" class="btn btn-outline btn-sm">
+          <i class="fas fa-times"></i>
+          Clear Filters
+        </button>
+      </div>
+      
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="search">Search</label>
+          <input
+            type="text"
+            id="search"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="applyFilters()"
+            placeholder="Search pitches..."
+            class="filter-input"
+          >
+        </div>
+
+        <div class="filter-group">
+          <label for="stage">Stage</label>
+          <select
+            id="stage"
+            [(ngModel)]="selectedStage"
+            (ngModelChange)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">All Stages</option>
+            @for (stage of stages; track stage) {
+              <option [value]="stage">{{ stage | titlecase }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="industry">Industry</label>
+          <select
+            id="industry"
+            [(ngModel)]="selectedIndustry"
+            (ngModelChange)="applyFilters()"
+            class="filter-select"
+          >
+            <option value="">All Industries</option>
+            @for (industry of industries; track industry) {
+              <option [value]="industry">{{ industry }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="minFunding">Min Funding</label>
+          <select
+            id="minFunding"
+            [(ngModel)]="minFunding"
+            (ngModelChange)="applyFilters()"
+            class="filter-select"
+          >
+            <option [value]="0">Any Amount</option>
+            <option [value]="10000">$10K+</option>
+            <option [value]="50000">$50K+</option>
+            <option [value]="100000">$100K+</option>
+            <option [value]="500000">$500K+</option>
+            <option [value]="1000000">$1M+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pitches Section -->
+    <div class="pitches-section">
+      <div class="section-header">
+        <h2>
+          @if (filteredPitches.length !== pitches.length) {
+            Filtered Pitches ({{ filteredPitches.length }} of {{ pitches.length }})
+          } @else {
+            All Pitches ({{ pitches.length }})
+          }
+        </h2>
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading pitches...</p>
+        </div>
+      } @else if (filteredPitches.length === 0) {
+        <div class="empty-state">
+          @if (pitches.length === 0) {
+            <i class="fas fa-lightbulb"></i>
+            <h3>No pitches available</h3>
+            <p>Check back later for new startup pitches to evaluate.</p>
+          } @else {
+            <i class="fas fa-filter"></i>
+            <h3>No pitches match your filters</h3>
+            <p>Try adjusting your search criteria to see more results.</p>
+            <button (click)="clearFilters()" class="btn btn-primary">
+              Clear Filters
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="pitches-grid">
+          @for (pitch of filteredPitches; track pitch.id) {
+            <app-pitch-card 
+              [pitch]="pitch" 
+              [userRole]="'investor'"
+              (vote)="onVote($event)">
+            </app-pitch-card>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Investment Tips -->
+    <div class="tips-section">
+      <div class="section-header">
+        <h2>Investment Tips</h2>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="tip-content">
+            <h3>Research Thoroughly</h3>
+            <p>Read the full pitch, check the team background, and understand the market opportunity.</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="tip-content">
+            <h3>Evaluate Traction</h3>
+            <p>Look for evidence of customer validation, revenue growth, and market adoption.</p>
+          </div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="tip-content">
+            <h3>Assess the Team</h3>
+            <p>Strong execution often matters more than the idea. Evaluate the founder's experience.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

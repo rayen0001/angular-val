@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-content">
+      <div class="navbar-brand">
+        <a routerLink="/" class="brand-link">
+          <i class="fas fa-rocket"></i>
+          <span>PitchPlatform</span>
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+          Home
+        </a>
+
+        @if (isAuthenticated()) {
+          <div class="user-menu">
+            <button class="user-button" (click)="navigateToDashboard()">
+              <i class="fas fa-user"></i>
+              <span>Dashboard</span>
+            </button>
+            <button class="logout-button" (click)="logout()">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        } @else {
+          <div class="auth-buttons">
+            <a routerLink="/login" class="btn btn-outline">Login</a>
+            <a routerLink="/register" class="btn btn-primary">Register</a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

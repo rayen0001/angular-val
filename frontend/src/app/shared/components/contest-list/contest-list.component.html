@@ -1,0 +1,73 @@
+<div class="contest-list">
+  @if (contests.length === 0) {
+    <div class="empty-state">
+      <i class="fas fa-trophy"></i>
+      <h3>No contests available</h3>
+      <p>Check back later for exciting pitch competitions!</p>
+    </div>
+  } @else {
+    <div class="contests-grid">
+      @for (contest of contests; track contest.id) {
+        <div class="contest-card fade-in">
+          <div class="contest-header">
+            <h3 class="contest-title">{{ contest.title }}</h3>
+            <span class="status-badge" [class]="getStatusClass(contest.status)">
+              {{ contest.status | titlecase }}
+            </span>
+          </div>
+
+          <div class="contest-content">
+            <p class="contest-description">{{ contest.description }}</p>
+            
+            <div class="contest-details">
+              <div class="detail-row">
+                <i class="fas fa-calendar-start"></i>
+                <span>Starts: {{ formatDate(contest.startDate) }}</span>
+              </div>
+              <div class="detail-row">
+                <i class="fas fa-calendar-end"></i>
+                <span>Ends: {{ formatDate(contest.endDate) }}</span>
+              </div>
+              <div class="detail-row">
+                <i class="fas fa-gift"></i>
+                <span>Prize: {{ contest.prize }}</span>
+              </div>
+              <div class="detail-row">
+                <i class="fas fa-users"></i>
+                <span>{{ contest.pitches.length }} participants</span>
+              </div>
+            </div>
+
+            @if (contest.winnerId) {
+              <div class="winner-announcement">
+                <i class="fas fa-crown"></i>
+                <span>Winner Selected!</span>
+              </div>
+            }
+          </div>
+
+          @if (showActions) {
+            <div class="contest-actions">
+              <button (click)="onEdit(contest.id)" class="btn btn-outline btn-sm">
+                <i class="fas fa-edit"></i>
+                Edit
+              </button>
+              
+              @if (contest.status === 'ended' && !contest.winnerId) {
+                <button (click)="onSelectWinner(contest.id)" class="btn btn-primary btn-sm">
+                  <i class="fas fa-crown"></i>
+                  Select Winner
+                </button>
+              }
+              
+              <button (click)="onDelete(contest.id)" class="btn btn-secondary btn-sm">
+                <i class="fas fa-trash"></i>
+                Delete
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

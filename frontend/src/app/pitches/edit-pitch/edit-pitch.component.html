@@ -1,0 +1,280 @@
+<div class="edit-pitch">
+  <div class="container">
+    <!-- Header -->
+    <div class="pitch-header">
+      <div class="header-content">
+        <h1>Edit Your Pitch</h1>
+        <p>Update your startup information</p>
+      </div>
+      <a routerLink="/founder" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </a>
+    </div>
+
+    @if (loadingPitch) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading pitch...</p>
+      </div>
+    } @else {
+      <!-- Form Container -->
+      <div class="form-container">
+        <form [formGroup]="pitchForm" (ngSubmit)="onSubmit()" class="pitch-form">
+          
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h2>Basic Information</h2>
+            
+            <div class="form-group">
+              <label for="title">Pitch Title *</label>
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                [class.error]="getFieldError('title')"
+                placeholder="A compelling title for your startup"
+              >
+              @if (getFieldError('title')) {
+                <div class="error-message">{{ getFieldError('title') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="description">Short Description *</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                [class.error]="getFieldError('description')"
+                placeholder="A brief overview of what your startup does..."
+                rows="4"
+              ></textarea>
+              @if (getFieldError('description')) {
+                <div class="error-message">{{ getFieldError('description') }}</div>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="industry">Industry *</label>
+                <select
+                  id="industry"
+                  formControlName="industry"
+                  [class.error]="getFieldError('industry')"
+                >
+                  <option value="">Select an industry</option>
+                  @for (industry of industries; track industry) {
+                    <option [value]="industry">{{ industry }}</option>
+                  }
+                </select>
+                @if (getFieldError('industry')) {
+                  <div class="error-message">{{ getFieldError('industry') }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="stage">Company Stage *</label>
+                <select
+                  id="stage"
+                  formControlName="stage"
+                  [class.error]="getFieldError('stage')"
+                >
+                  <option value="">Select a stage</option>
+                  @for (stage of stages; track stage.value) {
+                    <option [value]="stage.value">{{ stage.label }}</option>
+                  }
+                </select>
+                @if (getFieldError('stage')) {
+                  <div class="error-message">{{ getFieldError('stage') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input
+                type="text"
+                id="location"
+                formControlName="location"
+                [class.error]="getFieldError('location')"
+                placeholder="City, State/Country"
+              >
+              @if (getFieldError('location')) {
+                <div class="error-message">{{ getFieldError('location') }}</div>
+              }
+            </div>
+          </div>
+
+          <!-- Problem & Solution -->
+          <div class="form-section">
+            <h2>Problem & Solution</h2>
+            
+            <div class="form-group">
+              <label for="problem">Problem Statement *</label>
+              <textarea
+                id="problem"
+                formControlName="problem"
+                [class.error]="getFieldError('problem')"
+                placeholder="What problem are you solving? Who has this problem? How big is the problem?"
+                rows="5"
+              ></textarea>
+              @if (getFieldError('problem')) {
+                <div class="error-message">{{ getFieldError('problem') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="solution">Your Solution *</label>
+              <textarea
+                id="solution"
+                formControlName="solution"
+                [class.error]="getFieldError('solution')"
+                placeholder="How does your product/service solve this problem? What makes it unique?"
+                rows="5"
+              ></textarea>
+              @if (getFieldError('solution')) {
+                <div class="error-message">{{ getFieldError('solution') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="market">Market Opportunity *</label>
+              <textarea
+                id="market"
+                formControlName="market"
+                [class.error]="getFieldError('market')"
+                placeholder="Describe your target market, market size, and growth potential..."
+                rows="4"
+              ></textarea>
+              @if (getFieldError('market')) {
+                <div class="error-message">{{ getFieldError('market') }}</div>
+              }
+            </div>
+          </div>
+
+          <!-- Business Details -->
+          <div class="form-section">
+            <h2>Business Details</h2>
+            
+            <div class="form-group">
+              <label for="businessModel">Business Model *</label>
+              <textarea
+                id="businessModel"
+                formControlName="businessModel"
+                [class.error]="getFieldError('businessModel')"
+                placeholder="How do you make money? What's your revenue model?"
+                rows="4"
+              ></textarea>
+              @if (getFieldError('businessModel')) {
+                <div class="error-message">{{ getFieldError('businessModel') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="competition">Competition & Competitive Advantage *</label>
+              <textarea
+                id="competition"
+                formControlName="competition"
+                [class.error]="getFieldError('competition')"
+                placeholder="Who are your competitors? What's your competitive advantage?"
+                rows="4"
+              ></textarea>
+              @if (getFieldError('competition')) {
+                <div class="error-message">{{ getFieldError('competition') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="team">Team *</label>
+              <textarea
+                id="team"
+                formControlName="team"
+                [class.error]="getFieldError('team')"
+                placeholder="Tell us about your founding team, their backgrounds, and key skills..."
+                rows="4"
+              ></textarea>
+              @if (getFieldError('team')) {
+                <div class="error-message">{{ getFieldError('team') }}</div>
+              }
+            </div>
+          </div>
+
+          <!-- Financials -->
+          <div class="form-section">
+            <h2>Financials & Funding</h2>
+            
+            <div class="form-group">
+              <label for="financials">Financial Information *</label>
+              <textarea
+                id="financials"
+                formControlName="financials"
+                [class.error]="getFieldError('financials')"
+                placeholder="Current revenue, growth metrics, financial projections, use of funds..."
+                rows="5"
+              ></textarea>
+              @if (getFieldError('financials')) {
+                <div class="error-message">{{ getFieldError('financials') }}</div>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fundingAmount">Funding Amount Needed *</label>
+                <input
+                  type="number"
+                  id="fundingAmount"
+                  formControlName="fundingAmount"
+                  [class.error]="getFieldError('fundingAmount')"
+                  placeholder="Amount in USD"
+                  min="1000"
+                  max="100000000"
+                >
+                @if (getFieldError('fundingAmount')) {
+                  <div class="error-message">{{ getFieldError('fundingAmount') }}</div>
+                }
+                @if (pitchForm.get('fundingAmount')?.value) {
+                  <div class="field-hint">
+                    {{ formatCurrency(pitchForm.get('fundingAmount')?.value) }}
+                  </div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="equity">Equity Offered (%) *</label>
+                <input
+                  type="number"
+                  id="equity"
+                  formControlName="equity"
+                  [class.error]="getFieldError('equity')"
+                  placeholder="Percentage"
+                  min="0.1"
+                  max="100"
+                  step="0.1"
+                >
+                @if (getFieldError('equity')) {
+                  <div class="error-message">{{ getFieldError('equity') }}</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <a routerLink="/founder" class="btn btn-secondary">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">
+              @if (loading) {
+                <i class="fas fa-spinner fa-spin"></i>
+                Updating Pitch...
+              } @else {
+                <i class="fas fa-save"></i>
+                Update Pitch
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+  </div>
+</div>

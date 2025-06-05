@@ -1,0 +1,257 @@
+<div class="admin-dashboard">
+  <div class="container">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <h1>Admin Dashboard</h1>
+        <p>Manage contests, monitor platform activity, and select winners</p>
+      </div>
+      <div class="header-actions">
+        <button (click)="showCreateForm = true" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Create Contest
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ totalUsers }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ pitches.length }}</h3>
+            <p>Total Pitches</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ contests.length }}</h3>
+            <p>Total Contests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-play"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getActiveContests().length }}</h3>
+            <p>Active Contests</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Contest Form -->
+    @if (showCreateForm) {
+      <div class="create-form-section">
+        <div class="form-card">
+          <div class="form-header">
+            <h2>Create New Contest</h2>
+            <button (click)="showCreateForm = false" class="close-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <form [formGroup]="contestForm" (ngSubmit)="onCreateContest()" class="contest-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="title">Contest Title</label>
+                <input
+                  type="text"
+                  id="title"
+                  formControlName="title"
+                  [class.error]="getFieldError('title')"
+                  placeholder="Enter contest title"
+                >
+                @if (getFieldError('title')) {
+                  <div class="error-message">{{ getFieldError('title') }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="prize">Prize</label>
+                <input
+                  type="text"
+                  id="prize"
+                  formControlName="prize"
+                  [class.error]="getFieldError('prize')"
+                  placeholder="e.g., $10,000 funding"
+                >
+                @if (getFieldError('prize')) {
+                  <div class="error-message">{{ getFieldError('prize') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                [class.error]="getFieldError('description')"
+                placeholder="Describe the contest theme and criteria"
+                rows="4"
+              ></textarea>
+              @if (getFieldError('description')) {
+                <div class="error-message">{{ getFieldError('description') }}</div>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <input
+                  type="datetime-local"
+                  id="startDate"
+                  formControlName="startDate"
+                  [class.error]="getFieldError('startDate')"
+                >
+                @if (getFieldError('startDate')) {
+                  <div class="error-message">{{ getFieldError('startDate') }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="endDate">End Date</label>
+                <input
+                  type="datetime-local"
+                  id="endDate"
+                  formControlName="endDate"
+                  [class.error]="getFieldError('endDate')"
+                >
+                @if (getFieldError('endDate')) {
+                  <div class="error-message">{{ getFieldError('endDate') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" (click)="showCreateForm = false" class="btn btn-secondary">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="creatingContest">
+                @if (creatingContest) {
+                  <i class="fas fa-spinner fa-spin"></i>
+                  Creating...
+                } @else {
+                  Create Contest
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <!-- Contests Section -->
+    <div class="contests-section">
+      <div class="section-header">
+        <h2>Contest Management</h2>
+        <p>Create, manage, and monitor pitch contests</p>
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading contests...</p>
+        </div>
+      } @else {
+        <app-contest-list 
+          [contests]="contests" 
+          [showActions]="true"
+          (edit)="onEditContest($event)"
+          (delete)="onDeleteContest($event)"
+          (selectWinner)="onSelectWinner($event)">
+        </app-contest-list>
+      }
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-section">
+      <div class="section-header">
+        <h2>Recent Activity</h2>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-plus-circle"></i>
+          </div>
+          <div class="activity-content">
+            <p><strong>New pitch submitted:</strong> "AI-Powered Healthcare Platform"</p>
+            <span class="activity-time">2 hours ago</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="activity-content">
+            <p><strong>Contest ended:</strong> "Q4 Innovation Challenge"</p>
+            <span class="activity-time">1 day ago</span>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <div class="activity-content">
+            <p><strong>New investor joined:</strong> Sarah Johnson</p>
+            <span class="activity-time">2 days ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Selection Modal -->
+  @if (showWinnerModal) {
+    <div class="modal-overlay" (click)="closeWinnerModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Select Contest Winner</h2>
+          <button (click)="closeWinnerModal()" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          @if (contestPitches.length === 0) {
+            <p>No pitches found for this contest.</p>
+          } @else {
+            <div class="pitches-list">
+              @for (pitch of contestPitches; track pitch.id) {
+                <div class="pitch-item">
+                  <div class="pitch-info">
+                    <h3>{{ pitch.title }}</h3>
+                    <p>{{ pitch.description }}</p>
+                    <div class="pitch-stats">
+                      <span>Votes: {{ pitch.votes?.length || 0 }}</span>
+                      <span>Comments: {{ pitch.comments?.length || 0 }}</span>
+                    </div>
+                  </div>
+                  <button (click)="selectWinner(pitch.id)" class="btn btn-primary">
+                    Select Winner
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,235 @@
+<div class="startup-profile">
+  <div class="container">
+    <div class="profile-header">
+      <div class="header-content">
+        <h1>Startup Profile</h1>
+        <p>Keep your company information up to date to attract the right investors</p>
+      </div>
+      <a routerLink="/founder" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </a>
+    </div>
+
+    @if (success) {
+      <div class="success-alert fade-in">
+        <i class="fas fa-check-circle"></i>
+        Profile updated successfully!
+      </div>
+    }
+
+    <div class="profile-form-container">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <!-- Company Information -->
+        <div class="form-section">
+          <h2>Company Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="companyName">Company Name *</label>
+              <input
+                type="text"
+                id="companyName"
+                formControlName="companyName"
+                [class.error]="getFieldError('companyName')"
+                placeholder="Enter your company name"
+              >
+              @if (getFieldError('companyName')) {
+                <div class="error-message">{{ getFieldError('companyName') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="website">Website</label>
+              <input
+                type="url"
+                id="website"
+                formControlName="website"
+                [class.error]="getFieldError('website')"
+                placeholder="https://yourcompany.com"
+              >
+              @if (getFieldError('website')) {
+                <div class="error-message">{{ getFieldError('website') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="industry">Industry *</label>
+              <select
+                id="industry"
+                formControlName="industry"
+                [class.error]="getFieldError('industry')"
+              >
+                <option value="">Select an industry</option>
+                @for (industry of industries; track industry) {
+                  <option [value]="industry">{{ industry }}</option>
+                }
+              </select>
+              @if (getFieldError('industry')) {
+                <div class="error-message">{{ getFieldError('industry') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="stage">Company Stage *</label>
+              <select
+                id="stage"
+                formControlName="stage"
+                [class.error]="getFieldError('stage')"
+              >
+                <option value="">Select a stage</option>
+                @for (stage of stages; track stage.value) {
+                  <option [value]="stage.value">{{ stage.label }}</option>
+                }
+              </select>
+              @if (getFieldError('stage')) {
+                <div class="error-message">{{ getFieldError('stage') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <input
+                type="text"
+                id="location"
+                formControlName="location"
+                [class.error]="getFieldError('location')"
+                placeholder="City, State/Country"
+              >
+              @if (getFieldError('location')) {
+                <div class="error-message">{{ getFieldError('location') }}</div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="foundedYear">Founded Year *</label>
+              <input
+                type="number"
+                id="foundedYear"
+                formControlName="foundedYear"
+                [class.error]="getFieldError('foundedYear')"
+                placeholder="2023"
+              >
+              @if (getFieldError('foundedYear')) {
+                <div class="error-message">{{ getFieldError('foundedYear') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="teamSize">Team Size *</label>
+            <input
+              type="number"
+              id="teamSize"
+              formControlName="teamSize"
+              [class.error]="getFieldError('teamSize')"
+              placeholder="Number of team members"
+            >
+            @if (getFieldError('teamSize')) {
+              <div class="error-message">{{ getFieldError('teamSize') }}</div>
+            }
+          </div>
+        </div>
+
+        <!-- Company Description -->
+        <div class="form-section">
+          <h2>Company Description</h2>
+          
+          <div class="form-group">
+            <label for="description">Company Description *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              [class.error]="getFieldError('description')"
+              placeholder="Describe what your company does, the problem you solve, and your unique value proposition..."
+              rows="4"
+            ></textarea>
+            @if (getFieldError('description')) {
+              <div class="error-message">{{ getFieldError('description') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="mission">Mission Statement *</label>
+            <textarea
+              id="mission"
+              formControlName="mission"
+              [class.error]="getFieldError('mission')"
+              placeholder="What is your company's mission?"
+              rows="3"
+            ></textarea>
+            @if (getFieldError('mission')) {
+              <div class="error-message">{{ getFieldError('mission') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="vision">Vision Statement *</label>
+            <textarea
+              id="vision"
+              formControlName="vision"
+              [class.error]="getFieldError('vision')"
+              placeholder="What is your long-term vision?"
+              rows="3"
+            ></textarea>
+            @if (getFieldError('vision')) {
+              <div class="error-message">{{ getFieldError('vision') }}</div>
+            }
+          </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="form-section">
+          <h2>Social Media & Links</h2>
+          
+          <div class="form-group">
+            <label for="linkedIn">LinkedIn</label>
+            <input
+              type="url"
+              id="linkedIn"
+              formControlName="linkedIn"
+              placeholder="https://linkedin.com/company/yourcompany"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="twitter">Twitter</label>
+            <input
+              type="url"
+              id="twitter"
+              formControlName="twitter"
+              placeholder="https://twitter.com/yourcompany"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="facebook">Facebook</label>
+            <input
+              type="url"
+              id="facebook"
+              formControlName="facebook"
+              placeholder="https://facebook.com/yourcompany"
+            >
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">
+            @if (loading) {
+              <i class="fas fa-spinner fa-spin"></i>
+              Updating Profile...
+            } @else {
+              <i class="fas fa-save"></i>
+              Update Profile
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="pitch-card fade-in">
+  <div class="pitch-header">
+    <h3 class="pitch-title">{{ pitch.title }}</h3>
+    <div class="pitch-meta">
+      <span class="stage-badge" [class]="'stage-' + pitch.stage">{{ pitch.stage | titlecase }}</span>
+      <span class="industry">{{ pitch.industry }}</span>
+    </div>
+  </div>
+
+  <div class="pitch-content">
+    <p class="pitch-description">{{ pitch.description }}</p>
+    
+    <div class="pitch-details">
+      <div class="detail-item">
+        <i class="fas fa-dollar-sign"></i>
+        <span>{{ formatCurrency(pitch.fundingAmount) }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-chart-pie"></i>
+        <span>{{ pitch.equity }}% equity</span>
+      </div>
+      <div class="detail-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>{{ pitch.location }}</span>
+      </div>
+    </div>
+
+    <div class="founder-info">
+      <i class="fas fa-user"></i>
+      <span>{{ pitch.founder.firstName }} {{ pitch.founder.lastName }}</span>
+    </div>
+  </div>
+
+  <div class="pitch-footer">
+    <div class="pitch-stats">
+      <div class="stat">
+        <i class="fas fa-star"></i>
+        <span>{{ getAverageScore() || 'No votes' }}</span>
+      </div>
+      <div class="stat">
+        <i class="fas fa-comment"></i>
+        <span>{{ pitch.comments?.length || 0 }} comments</span>
+      </div>
+    </div>
+
+    <div class="pitch-actions">
+      @if (userRole === 'investor') {
+        <a [routerLink]="['/investor/pitch', pitch.id]" class="btn btn-primary btn-sm">
+          View Details
+        </a>
+      }
+
+      @if (showActions && userRole === 'founder') {
+        <button (click)="onEdit()" class="btn btn-outline btn-sm">
+          <i class="fas fa-edit"></i>
+          Edit
+        </button>
+        <button (click)="onDelete()" class="btn btn-secondary btn-sm">
+          <i class="fas fa-trash"></i>
+          Delete
+        </button>
+      }
+
+      @if (userRole === 'investor') {
+        <div class="vote-buttons">
+          <button (click)="onVote(1)" class="vote-btn vote-1" title="Poor">1</button>
+          <button (click)="onVote(2)" class="vote-btn vote-2" title="Fair">2</button>
+          <button (click)="onVote(3)" class="vote-btn vote-3" title="Good">3</button>
+          <button (click)="onVote(4)" class="vote-btn vote-4" title="Very Good">4</button>
+          <button (click)="onVote(5)" class="vote-btn vote-5" title="Excellent">5</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

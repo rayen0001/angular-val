@@ -1,0 +1,245 @@
+<div class="pitch-detail">
+  <div class="container">
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading pitch details...</p>
+      </div>
+    } @else if (!pitch) {
+      <div class="error-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Pitch not found</h2>
+        <p>The pitch you're looking for doesn't exist or has been removed.</p>
+        <a routerLink="/investor" class="btn btn-primary">Back to Dashboard</a>
+      </div>
+    } @else {
+      <!-- Header -->
+      <div class="pitch-header">
+        <div class="header-content">
+          <div class="breadcrumb">
+            <a routerLink="/investor">Dashboard</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Pitch Details</span>
+          </div>
+          <h1>{{ pitch.title }}</h1>
+          <div class="pitch-meta">
+            <span class="stage-badge" [class]="'stage-' + pitch.stage">{{ pitch.stage | titlecase }}</span>
+            <span class="industry">{{ pitch.industry }}</span>
+            <span class="location">
+              <i class="fas fa-map-marker-alt"></i>
+              {{ pitch.location }}
+            </span>
+          </div>
+        </div>
+        <div class="header-stats">
+          <div class="stat-item">
+            <div class="stat-value">{{ getAverageScore() || 'N/A' }}</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ pitch.votes?.length || 0 }}</div>
+            <div class="stat-label">Votes</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ comments.length }}</div>
+            <div class="stat-label">Comments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Voting Section -->
+      <div class="voting-section">
+        <div class="voting-card">
+          <h3>Rate this Pitch</h3>
+          @if (userVote) {
+            <p class="user-vote">You rated this pitch: <strong>{{ userVote }}/5</strong></p>
+          } @else {
+            <p>Share your opinion by rating this pitch</p>
+          }
+          <div class="vote-buttons">
+            @for (score of [1, 2, 3, 4, 5]; track score) {
+              <button 
+                (click)="onVote(score)" 
+                class="vote-btn"
+                [class]="'vote-' + score"
+                [class.selected]="userVote === score"
+                [disabled]="votingLoading"
+                [title]="score === 1 ? 'Poor' : score === 2 ? 'Fair' : score === 3 ? 'Good' : score === 4 ? 'Very Good' : 'Excellent'"
+              >
+                {{ score }}
+              </button>
+            }
+          </div>
+          @if (votingLoading) {
+            <div class="voting-loading">
+              <i class="fas fa-spinner fa-spin"></i>
+              Submitting vote...
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="pitch-content">
+        <div class="content-grid">
+          <!-- Left Column -->
+          <div class="main-content">
+            <!-- Overview -->
+            <section class="content-section">
+              <h2>Overview</h2>
+              <p class="pitch-description">{{ pitch.description }}</p>
+            </section>
+
+            <!-- Problem & Solution -->
+            <section class="content-section">
+              <h2>Problem & Solution</h2>
+              <div class="problem-solution">
+                <div class="problem">
+                  <h3>Problem</h3>
+                  <p>{{ pitch.problem }}</p>
+                </div>
+                <div class="solution">
+                  <h3>Solution</h3>
+                  <p>{{ pitch.solution }}</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Market -->
+            <section class="content-section">
+              <h2>Market Opportunity</h2>
+              <p>{{ pitch.market }}</p>
+            </section>
+
+            <!-- Business Model -->
+            <section class="content-section">
+              <h2>Business Model</h2>
+              <p>{{ pitch.businessModel }}</p>
+            </section>
+
+            <!-- Competition -->
+            <section class="content-section">
+              <h2>Competition & Competitive Advantage</h2>
+              <p>{{ pitch.competition }}</p>
+            </section>
+
+            <!-- Team -->
+            <section class="content-section">
+              <h2>Team</h2>
+              <p>{{ pitch.team }}</p>
+            </section>
+
+            <!-- Financials -->
+            <section class="content-section">
+              <h2>Financials</h2>
+              <p>{{ pitch.financials }}</p>
+            </section>
+          </div>
+
+          <!-- Right Column -->
+          <div class="sidebar-content">
+            <!-- Key Metrics -->
+            <div class="metrics-card">
+              <h3>Key Metrics</h3>
+              <div class="metrics-list">
+                <div class="metric-item">
+                  <span class="metric-label">Funding Needed</span>
+                  <span class="metric-value">{{ formatCurrency(pitch.fundingAmount) }}</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Equity Offered</span>
+                  <span class="metric-value">{{ pitch.equity }}%</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Company Stage</span>
+                  <span class="metric-value">{{ pitch.stage | titlecase }}</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">Industry</span>
+                  <span class="metric-value">{{ pitch.industry }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Founder Info -->
+            <div class="founder-card">
+              <h3>Founder</h3>
+              <div class="founder-info">
+                <div class="founder-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="founder-details">
+                  <h4>{{ pitch.founder.firstName }} {{ pitch.founder.lastName }}</h4>
+                  <p>{{ pitch.founder.email }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <h2>Comments & Feedback</h2>
+        
+        <!-- Add Comment Form -->
+        <div class="comment-form-card">
+          <h3>Leave a Comment</h3>
+          <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" class="comment-form">
+            <div class="form-group">
+              <textarea
+                formControlName="content"
+                [class.error]="getFieldError('content')"
+                placeholder="Share your thoughts, questions, or feedback..."
+                rows="4"
+              ></textarea>
+              @if (getFieldError('content')) {
+                <div class="error-message">{{ getFieldError('content') }}</div>
+              }
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="commentLoading">
+                @if (commentLoading) {
+                  <i class="fas fa-spinner fa-spin"></i>
+                  Posting...
+                } @else {
+                  <i class="fas fa-comment"></i>
+                  Post Comment
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+          @if (comments.length === 0) {
+            <div class="no-comments">
+              <i class="fas fa-comments"></i>
+              <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          } @else {
+            @for (comment of comments; track comment.id) {
+              <div class="comment-item fade-in">
+                <div class="comment-header">
+                  <div class="commenter-info">
+                    <div class="commenter-avatar">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <div class="commenter-details">
+                      <h4>{{ comment.investor.firstName }} {{ comment.investor.lastName }}</h4>
+                      <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="comment-content">
+                  <p>{{ comment.content }}</p>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

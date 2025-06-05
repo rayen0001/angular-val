@@ -1,0 +1,69 @@
+<div class="auth-page">
+  <div class="container">
+    <div class="auth-container">
+      <div class="auth-card fade-in">
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to your account to continue</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+          @if (error) {
+            <div class="error-alert">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ error }}
+            </div>
+          }
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              [class.error]="getFieldError('email')"
+              placeholder="Enter your email"
+            >
+            @if (getFieldError('email')) {
+              <div class="error-message">{{ getFieldError('email') }}</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              [class.error]="getFieldError('password')"
+              placeholder="Enter your password"
+            >
+            @if (getFieldError('password')) {
+              <div class="error-message">{{ getFieldError('password') }}</div>
+            }
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg auth-submit"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <i class="fas fa-spinner fa-spin"></i>
+              Signing In...
+            } @else {
+              Sign In
+            }
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>
+            Don't have an account?
+            <a routerLink="/register" class="auth-link">Sign up here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

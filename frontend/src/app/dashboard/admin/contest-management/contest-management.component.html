@@ -1,0 +1,332 @@
+<div class="contest-management">
+  <div class="container">
+    <!-- Header -->
+    <div class="management-header">
+      <div class="header-content">
+        <h1>Contest Management</h1>
+        <p>Create, manage, and monitor pitch contests</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/admin" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+        <button (click)="onCreateContest()" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Create Contest
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getContestStats().total }}</h3>
+            <p>Total Contests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-play"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getContestStats().active }}</h3>
+            <p>Active Contests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getContestStats().upcoming }}</h3>
+            <p>Upcoming Contests</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-flag-checkered"></i>
+          </div>
+          <div class="stat-content">
+            <h3>{{ getContestStats().ended }}</h3>
+            <p>Ended Contests</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contest Form -->
+    @if (showCreateForm || showEditForm) {
+      <div class="form-section">
+        <div class="form-card">
+          <div class="form-header">
+            <h2>{{ showEditForm ? 'Edit Contest' : 'Create New Contest' }}</h2>
+            <button (click)="closeForm()" class="close-btn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <form [formGroup]="contestForm" (ngSubmit)="onSubmitContest()" class="contest-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="title">Contest Title *</label>
+                <input
+                  type="text"
+                  id="title"
+                  formControlName="title"
+                  [class.error]="getFieldError('title')"
+                  placeholder="Enter contest title"
+                >
+                @if (getFieldError('title')) {
+                  <div class="error-message">{{ getFieldError('title') }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="prize">Prize *</label>
+                <input
+                  type="text"
+                  id="prize"
+                  formControlName="prize"
+                  [class.error]="getFieldError('prize')"
+                  placeholder="e.g., $10,000 funding"
+                >
+                @if (getFieldError('prize')) {
+                  <div class="error-message">{{ getFieldError('prize') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description *</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                [class.error]="getFieldError('description')"
+                placeholder="Describe the contest theme and criteria"
+                rows="4"
+              ></textarea>
+              @if (getFieldError('description')) {
+                <div class="error-message">{{ getFieldError('description') }}</div>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startDate">Start Date *</label>
+                <input
+                  type="datetime-local"
+                  id="startDate"
+                  formControlName="startDate"
+                  [class.error]="getFieldError('startDate')"
+                >
+                @if (getFieldError('startDate')) {
+                  <div class="error-message">{{ getFieldError('startDate') }}</div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="endDate">End Date *</label>
+                <input
+                  type="datetime-local"
+                  id="endDate"
+                  formControlName="endDate"
+                  [class.error]="getFieldError('endDate')"
+                >
+                @if (getFieldError('endDate')) {
+                  <div class="error-message">{{ getFieldError('endDate') }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" (click)="closeForm()" class="btn btn-secondary">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="submitting">
+                @if (submitting) {
+                  <i class="fas fa-spinner fa-spin"></i>
+                  {{ showEditForm ? 'Updating...' : 'Creating...' }}
+                } @else {
+                  {{ showEditForm ? 'Update Contest' : 'Create Contest' }}
+                }
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <!-- Contests List -->
+    <div class="contests-section">
+      <div class="section-header">
+        <h2>All Contests</h2>
+        <div class="section-actions">
+          <button (click)="loadData()" class="btn btn-outline btn-sm">
+            <i class="fas fa-refresh"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading contests...</p>
+        </div>
+      } @else {
+        <div class="contests-table">
+          <div class="table-header">
+            <div class="header-cell">Contest</div>
+            <div class="header-cell">Status</div>
+            <div class="header-cell">Dates</div>
+            <div class="header-cell">Participants</div>
+            <div class="header-cell">Prize</div>
+            <div class="header-cell">Actions</div>
+          </div>
+
+          @if (contests.length === 0) {
+            <div class="empty-state">
+              <i class="fas fa-trophy"></i>
+              <h3>No contests created yet</h3>
+              <p>Create your first contest to get started!</p>
+              <button (click)="onCreateContest()" class="btn btn-primary">
+                Create Contest
+              </button>
+            </div>
+          } @else {
+            @for (contest of contests; track contest.id) {
+              <div class="table-row">
+                <div class="cell contest-info">
+                  <h4>{{ contest.title }}</h4>
+                  <p>{{ contest.description | slice:0:100 }}{{ contest.description.length > 100 ? '...' : '' }}</p>
+                </div>
+                <div class="cell">
+                  <span class="status-badge" [class]="'status-' + contest.status">
+                    {{ contest.status | titlecase }}
+                  </span>
+                </div>
+                <div class="cell">
+                  <div class="date-info">
+                    <small>Start: {{ formatDate(contest.startDate) }}</small>
+                    <small>End: {{ formatDate(contest.endDate) }}</small>
+                  </div>
+                </div>
+                <div class="cell">
+                  <span class="participant-count">{{ contest.pitches.length }} pitches</span>
+                </div>
+                <div class="cell">
+                  <span class="prize-amount">{{ contest.prize }}</span>
+                </div>
+                <div class="cell actions">
+                  <button (click)="onEditContest(contest.id)" class="action-btn edit-btn" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button (click)="onManagePitches(contest.id)" class="action-btn manage-btn" title="Manage Pitches">
+                    <i class="fas fa-list"></i>
+                  </button>
+                  @if (contest.status === 'ended' && !contest.winnerId) {
+                    <button (click)="onSelectWinner(contest.id)" class="action-btn winner-btn" title="Select Winner">
+                      <i class="fas fa-crown"></i>
+                    </button>
+                  }
+                  <button (click)="onDeleteContest(contest.id)" class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Winner Selection Modal -->
+  @if (showWinnerModal) {
+    <div class="modal-overlay" (click)="closeWinnerModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Select Contest Winner</h2>
+          <button (click)="closeWinnerModal()" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          @if (contestPitches.length === 0) {
+            <div class="empty-modal">
+              <i class="fas fa-info-circle"></i>
+              <p>No pitches found for this contest.</p>
+            </div>
+          } @else {
+            <div class="pitches-list">
+              @for (pitch of contestPitches; track pitch.id) {
+                <div class="pitch-item">
+                  <div class="pitch-info">
+                    <h3>{{ pitch.title }}</h3>
+                    <p>{{ pitch.description }}</p>
+                    <div class="pitch-stats">
+                      <span><i class="fas fa-star"></i> {{ pitch.votes?.length || 0 }} votes</span>
+                      <span><i class="fas fa-comment"></i> {{ pitch.comments?.length || 0 }} comments</span>
+                      <span><i class="fas fa-dollar-sign"></i> {{ pitch.fundingAmount | currency }}</span>
+                    </div>
+                  </div>
+                  <button (click)="selectWinner(pitch.id)" class="btn btn-primary">
+                    <i class="fas fa-crown"></i>
+                    Select Winner
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Pitch Management Modal -->
+  @if (showPitchModal) {
+    <div class="modal-overlay" (click)="closePitchModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Manage Contest Pitches</h2>
+          <button (click)="closePitchModal()" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          @if (availablePitches.length === 0) {
+            <div class="empty-modal">
+              <i class="fas fa-info-circle"></i>
+              <p>All available pitches are already assigned to this contest.</p>
+            </div>
+          } @else {
+            <div class="pitches-list">
+              @for (pitch of availablePitches; track pitch.id) {
+                <div class="pitch-item">
+                  <div class="pitch-info">
+                    <h3>{{ pitch.title }}</h3>
+                    <p>{{ pitch.description }}</p>
+                    <div class="pitch-meta">
+                      <span class="stage-badge">{{ pitch.stage | titlecase }}</span>
+                      <span class="industry">{{ pitch.industry }}</span>
+                    </div>
+                  </div>
+                  <button (click)="addPitchToContest(pitch.id)" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Add to Contest
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
