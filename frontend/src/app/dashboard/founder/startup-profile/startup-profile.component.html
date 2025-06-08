@@ -18,6 +18,13 @@
       </div>
     }
 
+    @if (errorMessage) {
+      <div class="error-alert fade-in">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage }}
+      </div>
+    }
+
     <div class="profile-form-container">
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
         <!-- Company Information -->
@@ -57,16 +64,19 @@
           <div class="form-row">
             <div class="form-group">
               <label for="industry">Industry *</label>
-              <select
+              <input
+                type="text"
                 id="industry"
                 formControlName="industry"
                 [class.error]="getFieldError('industry')"
+                placeholder="Enter industry (e.g., Technology)"
+                list="industry-suggestions"
               >
-                <option value="">Select an industry</option>
-                @for (industry of industries; track industry) {
+              <datalist id="industry-suggestions">
+                @for (industry of suggestedIndustries; track industry) {
                   <option [value]="industry">{{ industry }}</option>
                 }
-              </select>
+              </datalist>
               @if (getFieldError('industry')) {
                 <div class="error-message">{{ getFieldError('industry') }}</div>
               }
@@ -163,7 +173,7 @@
               rows="3"
             ></textarea>
             @if (getFieldError('mission')) {
-              <div class="error-message">{{ getFieldError('mission') }}</div>
+ Hedef: <div class="error-message">{{ getFieldError('mission') }}</div>
             }
           </div>
 
@@ -182,38 +192,72 @@
           </div>
         </div>
 
-        <!-- Social Media -->
+        <!-- Social Media Links -->
         <div class="form-section">
-          <h2>Social Media & Links</h2>
+          <h2>Social Media Links</h2>
           
-          <div class="form-group">
-            <label for="linkedIn">LinkedIn</label>
-            <input
-              type="url"
-              id="linkedIn"
-              formControlName="linkedIn"
-              placeholder="https://linkedin.com/company/yourcompany"
-            >
-          </div>
+          <div class="social-links">
+            @for (link of socialLinks.controls; track $index; let i = $index) {
+              <div class="form-row social-link-row">
+                <div class="form-group">
+                  <label [for]="'platform-' + i">Platform *</label>
+                  <input
+                    type="text"
+                    [id]="'platform-' + i"
+                    [formControl]="getSocialLinkControl(i, 'platform')"
+                    [class.error]="getFieldError('socialLinks.' + i + '.platform')"
+                    placeholder="e.g., LinkedIn, Twitter"
+                    list="platform-suggestions"
+                  >
+                  <datalist id="platform-suggestions">
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Twitter">Twitter</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="GitHub">GitHub</option>
+                    <option value="Other">Other</option>
+                  </datalist>
+                  @if (getFieldError('socialLinks.' + i + '.platform')) {
+                    <div class="error-message">{{ getFieldError('socialLinks.' + i + '.platform') }}</div>
+                  }
+                </div>
 
-          <div class="form-group">
-            <label for="twitter">Twitter</label>
-            <input
-              type="url"
-              id="twitter"
-              formControlName="twitter"
-              placeholder="https://twitter.com/yourcompany"
-            >
-          </div>
+                <div class="form-group">
+                  <label [for]="'url-' + i">URL *</label>
+                  <input
+                    type="url"
+                    [id]="'url-' + i"
+                    [formControl]="getSocialLinkControl(i, 'url')"
+                    [class.error]="getFieldError('socialLinks ' + i + '.url')"
+                    placeholder="https://yourplatform.com"
+                  >
+                  @if (getFieldError('socialLinks.' + i + '.url')) {
+                    <div class="error-message">{{ getFieldError('socialLinks.' + i + '.url') }}</div>
+                  }
+                </div>
 
-          <div class="form-group">
-            <label for="facebook">Facebook</label>
-            <input
-              type="url"
-              id="facebook"
-              formControlName="facebook"
-              placeholder="https://facebook.com/yourcompany"
-            >
+                <button
+                  type="button"
+                  class="btn btn-outline btn-sm remove-link-btn"
+                  (click)="removeSocialLink(i)"
+                  title="Remove Link"
+                  aria-label="Remove social link"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            }
+
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-outline btn-add-link"
+                (click)="addSocialLink()"
+              >
+                <i class="fas fa-plus"></i>
+                Add Social Link
+              </button>
+            </div>
           </div>
         </div>
 

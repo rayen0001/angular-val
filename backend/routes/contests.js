@@ -7,6 +7,7 @@ const { auth, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 // Get all contests
+// Get all contests
 router.get('/', async (req, res) => {
   try {
     const contests = await Contest.find()
@@ -14,19 +15,32 @@ router.get('/', async (req, res) => {
       .populate('winnerId')
       .sort({ createdAt: -1 });
     
-    const contestsResponse = contests.map(contest => ({
-      id: contest._id,
-      title: contest.title,
-      description: contest.description,
-      startDate: contest.startDate,
-      endDate: contest.endDate,
-      prize: contest.prize,
-      status: contest.status,
-      pitches: contest.pitches.map(pitch => pitch._id.toString()),
-      winnerId: contest.winnerId?._id?.toString(),
-      createdAt: contest.createdAt,
-      updatedAt: contest.updatedAt
-    }));
+    const now = new Date(); // Current date and time
+    const contestsResponse = contests.map(contest => {
+      // Compute status based on current date
+      let status;
+      if (now < contest.startDate) {
+        status = 'upcoming';
+      } else if (now <= contest.endDate) {
+        status = 'active';
+      } else {
+        status = 'ended';
+      }
+
+      return {
+        id: contest._id,
+        title: contest.title,
+        description: contest.description,
+        startDate: contest.startDate,
+        endDate: contest.endDate,
+        prize: contest.prize,
+        status, // Use computed status
+        pitches: contest.pitches.map(pitch => pitch._id.toString()),
+        winnerId: contest.winnerId?._id?.toString(),
+        createdAt: contest.createdAt,
+        updatedAt: contest.updatedAt
+      };
+    });
 
     res.json(contestsResponse);
   } catch (error) {

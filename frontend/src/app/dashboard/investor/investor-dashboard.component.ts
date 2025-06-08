@@ -9,6 +9,7 @@ import { PitchCardComponent } from "../../shared/components/pitch-card/pitch-car
 import { ContestListComponent } from "../../shared/components/contest-list/contest-list.component"
 import { Pitch } from "../../core/models/pitch.model"
 import { Contest } from "../../core/models/contest.model"
+import { map, Observable } from "rxjs"
 
 @Component({
   selector: "app-investor-dashboard",
@@ -27,7 +28,10 @@ export class InvestorDashboardComponent implements OnInit {
   contests: Contest[] = []
   loading = true
   currentUser = this.authService.getCurrentUser()
-
+  
+  // Add property to store comment count
+  myCommentsCount = 0
+  
   // Filters
   selectedStage = ""
   selectedIndustry = ""
@@ -41,6 +45,7 @@ export class InvestorDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData()
+    this.loadCommentStats()
   }
 
   private loadData(): void {
@@ -55,6 +60,19 @@ export class InvestorDashboardComponent implements OnInit {
         console.error("Error loading data:", error)
         this.loading = false
       })
+  }
+
+  private loadCommentStats(): void {
+    this.getMyCommentsCount().subscribe({
+      next: (count) => {
+        console.log('Comment stats response:', count) // Debug log
+        this.myCommentsCount = count
+      },
+      error: (error) => {
+        console.error("Error loading comment stats:", error)
+        this.myCommentsCount = 0
+      }
+    })
   }
 
   onVote(event: { pitchId: string; score: number }): void {
@@ -104,11 +122,18 @@ export class InvestorDashboardComponent implements OnInit {
     }, 0)
   }
 
-  getMyCommentsCount(): number {
-    return this.pitches.reduce((count, pitch) => {
-      const myComments = pitch.comments?.filter((comment) => comment.investorId === this.currentUser?.id)
-      return count + (myComments?.length || 0)
-    }, 0)
+  getMyCommentsCount(): Observable<number> {
+    return this.pitchService.getUserCommentStats().pipe(
+      map(stats => {
+        console.log('Raw stats from API:', stats) // Debug log
+        return stats.totalComments
+      })
+    )
+  }
+
+  // Add getter for template usage
+  getMyCommentsCountSync(): number {
+    return this.myCommentsCount
   }
 
   getActiveContests(): Contest[] {

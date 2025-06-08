@@ -1,4 +1,4 @@
-import { Component, type OnInit, inject } from "@angular/core"
+import { Component, Input, type OnInit, inject } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { ReactiveFormsModule, FormBuilder, type FormGroup, Validators } from "@angular/forms"
 import { ActivatedRoute, RouterModule } from "@angular/router"
@@ -14,11 +14,12 @@ import { Pitch, Comment } from "../../core/models/pitch.model"
   styleUrls: ["./pitch-detail.component.scss"],
 })
 export class PitchDetailComponent implements OnInit {
+
   private route = inject(ActivatedRoute)
   private pitchService = inject(PitchService)
   private authService = inject(AuthService)
   private fb = inject(FormBuilder)
-
+  currentUserRole = this.authService.currentUserRole
   pitch: Pitch | null = null
   comments: Comment[] = []
   loading = true

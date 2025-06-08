@@ -15,10 +15,18 @@
 
         @if (isAuthenticated()) {
           <div class="user-menu">
+            @if (currentUserRole() === 'investor') {
+              <a class="nav-link" routerLink="/investor/startup-profiles" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" >
+                <i class="fa-regular fa-building"></i>
+                <span>Start-ups</span>
+              </a>
+            }
+            
             <button class="user-button" (click)="navigateToDashboard()">
               <i class="fas fa-user"></i>
               <span>Dashboard</span>
             </button>
+            
             <button class="logout-button" (click)="logout()">
               <i class="fas fa-sign-out-alt"></i>
               <span>Logout</span>

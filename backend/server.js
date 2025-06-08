@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const pitchRoutes = require('./routes/pitches');
 const contestRoutes = require('./routes/contests');
 const UsersRoutes = require('./routes/users');
+const startupProfileRoutes = require('./routes/startupProfile');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pitches', pitchRoutes);
 app.use('/api/contests', contestRoutes);
 app.use('/api/users', UsersRoutes);
+app.use('/api/startup-profile', startupProfileRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

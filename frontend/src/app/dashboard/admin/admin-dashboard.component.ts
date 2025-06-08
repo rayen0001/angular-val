@@ -6,14 +6,14 @@ import { PitchService } from "../../core/services/pitch.service"
 import { ContestService } from "../../core/services/contest.service"
 import { AuthService } from "../../core/services/auth.service"
 import { UsersService } from "../../core/services/users.service"
-import { ContestListComponent } from "../../shared/components/contest-list/contest-list.component"
 import  { Pitch } from "../../core/models/pitch.model"
 import  { Contest, CreateContestRequest } from "../../core/models/contest.model"
+import { ContestManagementComponent } from "./contest-management/contest-management.component"
 
 @Component({
   selector: "app-admin-dashboard",
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, ContestListComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, ContestManagementComponent],
   templateUrl: "./admin-dashboard.component.html",
   styleUrls: ["./admin-dashboard.component.scss"],
 })

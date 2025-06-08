@@ -1,0 +1,439 @@
+.profiles-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+// Header Section
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 24px;
+
+  .title-section {
+    .main-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a237e;
+      margin: 0 0 8px 0;
+
+      .title-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #3f51b5;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .stats-section {
+    display: flex;
+    gap: 16px;
+
+    .stat-card {
+      background: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      min-width: 100px;
+
+      .stat-number {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #3f51b5;
+      }
+
+      .stat-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+// Filters Card
+.filters-card {
+  margin-bottom: 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  .filters-form {
+    .search-row {
+      margin-bottom: 24px;
+
+      .search-field {
+        width: 100%;
+        max-width: 500px;
+      }
+    }
+
+    .filters-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      align-items: end;
+
+      .clear-btn {
+        height: 56px;
+        border-radius: 8px;
+      }
+    }
+  }
+}
+
+// Loading State
+.loading-container {
+  .loading-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+
+    .skeleton-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+      .skeleton-header {
+        height: 24px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 4px;
+        margin-bottom: 16px;
+      }
+
+      .skeleton-content {
+        .skeleton-line {
+          height: 16px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: loading 1.5s infinite;
+          border-radius: 4px;
+          margin-bottom: 12px;
+
+          &.short {
+            width: 60%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Error State
+.error-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  .error-content {
+    text-align: center;
+    padding: 48px 24px;
+
+    .error-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: #f44336;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+  }
+}
+
+// Profiles Grid
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+
+  .profile-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+
+    .profile-header {
+      padding: 24px 24px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      .company-info {
+        flex: 1;
+
+        .company-name {
+          font-size: 1.4rem;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+
+        .company-details {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+
+          .industry-chip {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+          }
+
+          .stage-badge {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+
+            &.stage-idea { background: #e3f2fd; color: #1976d2; }
+            &.stage-prototype { background: #f3e5f5; color: #7b1fa2; }
+            &.stage-mvp { background: #e8f5e8; color: #388e3c; }
+            &.stage-growth { background: #fff3e0; color: #f57c00; }
+            &.stage-scale { background: #ffebee; color: #d32f2f; }
+          }
+        }
+      }
+
+      .profile-actions {
+        button {
+          color: white;
+        }
+      }
+    }
+
+    .profile-content {
+      padding: 24px;
+
+      .company-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 16px;
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.9rem;
+          color: #666;
+
+          .meta-icon {
+            font-size: 1.1rem;
+            width: 1.1rem;
+            height: 1.1rem;
+            color: #999;
+          }
+        }
+      }
+
+      .description {
+        color: #333;
+        line-height: 1.6;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .mission-vision {
+        margin-bottom: 16px;
+
+        .mission, .vision {
+          font-size: 0.9rem;
+          color: #555;
+          margin-bottom: 8px;
+          line-height: 1.5;
+
+          strong {
+            color: #333;
+          }
+        }
+      }
+
+      .founder-info {
+        margin-top: 16px;
+
+        mat-divider {
+          margin-bottom: 16px;
+        }
+
+        .founder-details {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .founder-icon {
+            color: #666;
+          }
+
+          .founder-text {
+            display: flex;
+            flex-direction: column;
+
+            .founder-name {
+              font-weight: 600;
+              color: #333;
+            }
+
+            .founder-title {
+              font-size: 0.85rem;
+              color: #666;
+            }
+          }
+        }
+      }
+
+      .social-links {
+        margin-top: 16px;
+
+        mat-divider {
+          margin-bottom: 16px;
+        }
+
+        .social-buttons {
+          display: flex;
+          gap: 8px;
+
+          .social-btn {
+            color: #666;
+            transition: color 0.2s ease;
+
+            &:hover {
+              color: #3f51b5;
+            }
+          }
+        }
+      }
+    }
+
+    .profile-actions-footer {
+      padding: 16px 24px;
+      background: #fafafa;
+      display: flex;
+      gap: 12px;
+    }
+  }
+}
+
+// Empty State
+.empty-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+
+  .empty-content {
+    text-align: center;
+    padding: 48px 24px;
+
+    .empty-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+  }
+}
+
+// Pagination
+.paginator {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .profiles-container {
+    padding: 16px;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .stats-section {
+      width: 100%;
+      justify-content: space-around;
+    }
+  }
+
+  .profiles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-form .filters-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-section .title-section .main-title {
+    font-size: 2rem;
+
+    .title-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .stats-section {
+    flex-direction: column;
+    gap: 12px;
+
+    .stat-card {
+      padding: 12px 16px;
+    }
+  }
+}

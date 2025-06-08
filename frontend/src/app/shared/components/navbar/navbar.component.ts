@@ -13,7 +13,7 @@ import { AuthService } from "../../../core/services/auth.service"
 export class NavbarComponent {
   private authService = inject(AuthService)
   private router = inject(Router)
-
+  
   isAuthenticated = this.authService.isAuthenticated
   currentUser = this.authService.currentUser$
   currentUserRole = this.authService.currentUserRole

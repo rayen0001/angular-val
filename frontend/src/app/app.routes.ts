@@ -58,6 +58,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import("./pitches/pitch-detail/pitch-detail.component").then((m) => m.PitchDetailComponent),
       },
+            {
+        path: "startup-profiles",
+        loadComponent: () =>
+          import("./dashboard/investor/startup-profiles-list/startup-profiles-list.component").then((m) => m.StartupProfilesListComponent),
+      },
     ],
   },
   {

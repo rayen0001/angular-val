@@ -1,64 +1,6 @@
 <div class="contest-management">
   <div class="container">
-    <!-- Header -->
-    <div class="management-header">
-      <div class="header-content">
-        <h1>Contest Management</h1>
-        <p>Create, manage, and monitor pitch contests</p>
-      </div>
-      <div class="header-actions">
-        <a routerLink="/admin" class="btn btn-outline">
-          <i class="fas fa-arrow-left"></i>
-          Back to Dashboard
-        </a>
-        <button (click)="onCreateContest()" class="btn btn-primary">
-          <i class="fas fa-plus"></i>
-          Create Contest
-        </button>
-      </div>
-    </div>
 
-    <!-- Stats Overview -->
-    <div class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getContestStats().total }}</h3>
-            <p>Total Contests</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-play"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getContestStats().active }}</h3>
-            <p>Active Contests</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getContestStats().upcoming }}</h3>
-            <p>Upcoming Contests</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-flag-checkered"></i>
-          </div>
-          <div class="stat-content">
-            <h3>{{ getContestStats().ended }}</h3>
-            <p>Ended Contests</p>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Contest Form -->
     @if (showCreateForm || showEditForm) {
@@ -167,6 +109,10 @@
       <div class="section-header">
         <h2>All Contests</h2>
         <div class="section-actions">
+                  <button (click)="onCreateContest()" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Create Contest
+        </button>
           <button (click)="loadData()" class="btn btn-outline btn-sm">
             <i class="fas fa-refresh"></i>
             Refresh
@@ -223,22 +169,42 @@
                 <div class="cell">
                   <span class="prize-amount">{{ contest.prize }}</span>
                 </div>
-                <div class="cell actions">
-                  <button (click)="onEditContest(contest.id)" class="action-btn edit-btn" title="Edit">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button (click)="onManagePitches(contest.id)" class="action-btn manage-btn" title="Manage Pitches">
-                    <i class="fas fa-list"></i>
-                  </button>
-                  @if (contest.status === 'ended' && !contest.winnerId) {
-                    <button (click)="onSelectWinner(contest.id)" class="action-btn winner-btn" title="Select Winner">
-                      <i class="fas fa-crown"></i>
-                    </button>
-                  }
-                  <button (click)="onDeleteContest(contest.id)" class="action-btn delete-btn" title="Delete">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
+<div class="cell actions">
+  <button 
+    (click)="onEditContest(contest.id)" 
+    class="action-btn edit-btn" 
+    title="Edit Contest" 
+    aria-label="Edit contest"
+  >
+    <i class="fas fa-pencil-alt"></i>
+  </button>
+  <button 
+    (click)="onManagePitches(contest.id)" 
+    class="action-btn manage-btn" 
+    title="Manage Pitches" 
+    aria-label="Manage pitches"
+  >
+    <i class="fas fa-clipboard-list"></i>
+  </button>
+  @if (contest.status === 'ended' && !contest.winnerId) {
+    <button 
+      (click)="onSelectWinner(contest.id)" 
+      class="action-btn winner-btn" 
+      title="Select Winner" 
+      aria-label="Select winner"
+    >
+      <i class="fas fa-trophy"></i>
+    </button>
+  }
+  <button 
+    (click)="onDeleteContest(contest.id)" 
+    class="action-btn delete-btn" 
+    title="Delete Contest" 
+    aria-label="Delete contest"
+  >
+    <i class="fas fa-trash-can"></i>
+  </button>
+</div>
               </div>
             }
           }
@@ -271,8 +237,8 @@
                     <h3>{{ pitch.title }}</h3>
                     <p>{{ pitch.description }}</p>
                     <div class="pitch-stats">
-                      <span><i class="fas fa-star"></i> {{ pitch.votes?.length || 0 }} votes</span>
-                      <span><i class="fas fa-comment"></i> {{ pitch.comments?.length || 0 }} comments</span>
+                      <span><i class="fas fa-star"></i> {{ pitch.votes.length || 0 }} votes</span>
+                      <span><i class="fas fa-comment"></i> {{ pitch.comments.length || 0 }} comments</span>
                       <span><i class="fas fa-dollar-sign"></i> {{ pitch.fundingAmount | currency }}</span>
                     </div>
                   </div>

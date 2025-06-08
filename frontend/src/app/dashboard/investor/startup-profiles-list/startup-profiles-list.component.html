@@ -1,0 +1,226 @@
+<div class="profiles-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h1 class="main-title">
+        <mat-icon class="title-icon">rocket_launch</mat-icon>
+        Discover Startups
+      </h1>
+      <p class="subtitle">Explore innovative startups and connect with founders</p>
+    </div>
+    
+    <div class="stats-section" *ngIf="!loading()">
+      <div class="stat-card">
+        <span class="stat-number">{{ totalProfiles() }}</span>
+        <span class="stat-label">Total Startups</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">{{ uniqueIndustries() }}</span>
+        <span class="stat-label">Industries</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">{{ currentPage() }}</span>
+        <span class="stat-label">Current Page</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <form [formGroup]="filtersForm" class="filters-form">
+        <div class="search-row">
+          <mat-form-field class="search-field" appearance="outline">
+            <mat-label>Search startups...</mat-label>
+            <input matInput formControlName="search" placeholder="Company name, description, mission...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+        
+        <div class="filters-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Industry</mat-label>
+            <mat-select formControlName="industry">
+              <mat-option value="">All Industries</mat-option>
+              <mat-option *ngFor="let industry of industries()" [value]="industry">
+                {{ industry }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Stage</mat-label>
+            <mat-select formControlName="stage">
+              <mat-option value="">All Stages</mat-option>
+              <mat-option value="idea">Idea</mat-option>
+              <mat-option value="prototype">Prototype</mat-option>
+              <mat-option value="mvp">MVP</mat-option>
+              <mat-option value="growth">Growth</mat-option>
+              <mat-option value="scale">Scale</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <mat-select formControlName="location">
+              <mat-option value="">All Locations</mat-option>
+              <mat-option *ngFor="let location of locations()" [value]="location">
+                {{ location }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Sort By</mat-label>
+            <mat-select formControlName="sortBy">
+              <mat-option value="createdAt">Newest First</mat-option>
+              <mat-option value="companyName">Company Name</mat-option>
+              <mat-option value="foundedYear">Founded Year</mat-option>
+              <mat-option value="teamSize">Team Size</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="clearFilters()" class="clear-btn">
+            <mat-icon>clear</mat-icon>
+            Clear
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <div class="loading-grid">
+      <div *ngFor="let item of [1,2,3,4,5,6]" class="skeleton-card">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <mat-card *ngIf="error()" class="error-card">
+    <mat-card-content class="error-content">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="loadProfiles()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Profiles Grid -->
+  <div *ngIf="!loading() && !error() && profiles().length > 0" class="profiles-grid">
+    <mat-card *ngFor="let profile of profiles(); trackBy: trackByProfileId" class="profile-card">
+      <mat-card-header class="profile-header">
+        <div class="company-info">
+          <mat-card-title class="company-name">{{ profile.companyName }}</mat-card-title>
+          <mat-card-subtitle class="company-details">
+            <span class="industry-chip">{{ profile.industry }}</span>
+            <span class="stage-badge" [class]="'stage-' + profile.stage">{{ profile.stage | titlecase }}</span>
+          </mat-card-subtitle>
+        </div>
+        <div class="profile-actions">
+          <button mat-icon-button [matTooltip]="'Visit ' + profile.companyName" 
+                  *ngIf="profile.website" 
+                  (click)="openWebsite(profile.website!)">
+            <mat-icon>launch</mat-icon>
+          </button>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="profile-content">
+        <div class="company-meta">
+          <div class="meta-item">
+            <mat-icon class="meta-icon">location_on</mat-icon>
+            <span>{{ profile.location }}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon class="meta-icon">calendar_today</mat-icon>
+            <span>Founded {{ profile.foundedYear }}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon class="meta-icon">group</mat-icon>
+            <span>{{ profile.teamSize }} {{ profile.teamSize === 1 ? 'person' : 'people' }}</span>
+          </div>
+        </div>
+
+        <p class="description">{{ profile.description }}</p>
+
+        <div class="mission-vision" *ngIf="profile.mission || profile.vision">
+          <div class="mission" *ngIf="profile.mission">
+            <strong>Mission:</strong> {{ profile.mission }}
+          </div>
+          <div class="vision" *ngIf="profile.vision">
+            <strong>Vision:</strong> {{ profile.vision }}
+          </div>
+        </div>
+
+        <div class="founder-info" *ngIf="profile.founder">
+          <mat-divider></mat-divider>
+          <div class="founder-details">
+            <mat-icon class="founder-icon">person</mat-icon>
+            <div class="founder-text">
+              <span class="founder-name">{{ profile.founder.firstName }} {{ profile.founder.lastName }}</span>
+              <span class="founder-title">Founder</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-links" *ngIf="profile.socialLinks && profile.socialLinks.length > 0">
+          <mat-divider></mat-divider>
+          <div class="social-buttons">
+            <button *ngFor="let link of profile.socialLinks" 
+                    mat-icon-button 
+                    [matTooltip]="link.platform | titlecase"
+                    (click)="openSocialLink(link.url)"
+                    class="social-btn">
+              <mat-icon>{{ getSocialIcon(link.platform) }}</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="profile-actions-footer">
+        <button mat-button color="primary" (click)="viewProfile(profile)">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+        <button mat-button (click)="contactFounder(profile)">
+          <mat-icon>email</mat-icon>
+          Contact
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <mat-card *ngIf="!loading() && !error() && profiles().length === 0" class="empty-card">
+    <mat-card-content class="empty-content">
+      <mat-icon class="empty-icon">search_off</mat-icon>
+      <h3>No startups found</h3>
+      <p>Try adjusting your search criteria or filters</p>
+      <button mat-raised-button color="primary" (click)="clearFilters()">
+        <mat-icon>clear</mat-icon>
+        Clear Filters
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Pagination -->
+  <mat-paginator *ngIf="!loading() && !error() && totalProfiles() > 0"
+                 [length]="totalProfiles()"
+                 [pageSize]="pageSize()"
+                 [pageSizeOptions]="[6, 12, 24, 48]"
+                 [pageIndex]="currentPage() - 1"
+                 (page)="onPageChange($event)"
+                 class="paginator">
+  </mat-paginator>
+</div>

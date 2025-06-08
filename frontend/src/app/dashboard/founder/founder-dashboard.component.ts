@@ -6,6 +6,7 @@ import { AuthService } from "../../core/services/auth.service"
 import { PitchCardComponent } from "../../shared/components/pitch-card/pitch-card.component"
 import  { Pitch } from "../../core/models/pitch.model"
 
+
 @Component({
   selector: "app-founder-dashboard",
   standalone: true,

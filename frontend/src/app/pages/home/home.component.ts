@@ -8,6 +8,7 @@ import { ContestListComponent } from "../../shared/components/contest-list/conte
 import { Pitch } from "../../core/models/pitch.model"
 import { Contest } from "../../core/models/contest.model"
 
+
 @Component({
   selector: "app-home",
   standalone: true,

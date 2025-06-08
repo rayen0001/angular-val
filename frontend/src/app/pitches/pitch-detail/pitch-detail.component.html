@@ -37,7 +37,7 @@
             <div class="stat-label">Average Rating</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">{{ pitch.votes?.length || 0 }}</div>
+            <div class="stat-value">{{ pitch.votes.length || 0 }}</div>
             <div class="stat-label">Votes</div>
           </div>
           <div class="stat-item">
@@ -48,6 +48,7 @@
       </div>
 
       <!-- Voting Section -->
+       @if(currentUserRole() === 'investor'){
       <div class="voting-section">
         <div class="voting-card">
           <h3>Rate this Pitch</h3>
@@ -78,7 +79,7 @@
           }
         </div>
       </div>
-
+}
       <!-- Main Content -->
       <div class="pitch-content">
         <div class="content-grid">

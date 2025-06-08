@@ -39,12 +39,12 @@
       </div>
       <div class="stat">
         <i class="fas fa-comment"></i>
-        <span>{{ pitch.comments?.length || 0 }} comments</span>
+        <span>{{ pitch.comments.length || 0 }} comments</span>
       </div>
     </div>
 
     <div class="pitch-actions">
-      @if (userRole === 'investor') {
+      @if (userRole === 'investor'|| userRole === 'founder') {
         <a [routerLink]="['/investor/pitch', pitch.id]" class="btn btn-primary btn-sm">
           View Details
         </a>

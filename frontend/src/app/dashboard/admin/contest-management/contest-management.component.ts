@@ -11,7 +11,7 @@ import { Pitch } from "../../../core/models/pitch.model"
 @Component({
   selector: "app-contest-management",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, ContestListComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: "./contest-management.component.html",
   styleUrls: ["./contest-management.component.scss"],
 })
